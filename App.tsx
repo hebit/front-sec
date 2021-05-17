@@ -1,23 +1,61 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as React from "react";
+import { Image, StatusBar } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from "@react-navigation/stack";
+import Home from "./src/screens/Home";
+import { colors } from "./src/utils/colors";
 
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+const Stack = createStackNavigator();
 
-export default function App() {
-  const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+const logoSize = 48;
+const LogoImg = (
+  <Image
+    source={require("./src/assets/logo.png")}
+    style={{
+      width: logoSize,
+      height: logoSize,
+      marginHorizontal: 4,
+    }}
+  />
+);
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
-    );
-  }
+const defaultScreenOptions: StackNavigationOptions = {
+  headerTitleStyle: {
+    color: colors.text.light,
+    textTransform: "uppercase",
+  },
+  headerTitleContainerStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft: logoSize,
+  },
+  headerStyle: {
+    backgroundColor: colors.primary.default,
+  },
+  headerRight: () => LogoImg,
+};
+
+function App() {
+  return (
+    <>
+      <StatusBar backgroundColor={colors.primary.dark} />
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={defaultScreenOptions}>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{
+              headerTitle: "Aulas",
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
+  );
 }
+
+export default App;
